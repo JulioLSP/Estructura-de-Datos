@@ -2,7 +2,7 @@
 #include <string>
 
 using namespace std;
-double minimo;
+
 
 string invertir(string cadena)
 {
