@@ -1,0 +1,80 @@
+#include <iostream>
+#include  <fstream>
+#include  <sstream>
+#include   <string>
+#include   <vector>
+
+using namespace std;
+
+class Contacto {
+    string nombre;
+    string apellido;
+    string email;
+    string numcel;
+public:
+    Contacto(string nombre = "",
+            string apellido = "",
+            string email = "",
+            string numcel = "")
+            : nombre(nombre), apellido(apellido),
+              email(email), numcel(numcel) {}
+    string toCSV() {
+        stringstream ss;
+        ss << apellido << ","
+           << nombre << ","
+           << email << ","
+           << numcel;
+        return ss.str();
+    }
+};
+
+class GestorContactos {
+    vector<Contacto*> contactos;
+public:
+    ~GestorContactos() {
+        for (int i = 0; i < contactos.size(); ++i) {
+            delete contactos[i];
+        }
+    }
+    void agregarContacto(string nombre = "",
+                        string apellido = "",
+                        string email = "",
+                        string numcel = "") {
+        contactos.push_back(new Contacto(nombre,
+                                         apellido,
+                                         email,
+                                         numcel));
+    }
+    void guardarContactos() {
+        ofstream arch("contactos.csv");
+        if (!arch.is_open()) return; // TODO manejo de errores
+        for (int i = 0; i < contactos.size(); ++i) {
+            arch << contactos[i]->toCSV() << endl;
+        }
+    }
+};
+
+int main() {
+    GestorContactos* gc = new GestorContactos();
+    
+    string nom, ape, ema, cel;
+    
+    do {
+        cout << "Ingrese el nombre (vacio para terminar): ";
+        cin >> nom;
+        if (nom == "") break;
+        cout << "Ingrese el apellido: ";
+        cin >> ape;
+        cout << "Ingrese el email: ";
+        cin >> ema;
+        cout << "Ingrese el número de celular: ";
+        cin >> cel;
+        gc->agregarContacto(nom, ape, ema, cel);
+    } while (nom != "");
+    cout << "Gracias por usar Skynet\n";
+    gc->guardarContactos();
+    
+    delete gc;
+    
+    return 0;
+}
