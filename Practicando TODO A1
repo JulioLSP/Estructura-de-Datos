@@ -1,0 +1,120 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <vector>
+#include <string>
+#include "stdlib.h"
+
+using namespace std;
+
+
+class zergbuilds
+{
+    string vsrace, type;
+    string timing;
+
+    public:
+    zergbuilds(string vsrace="",string type="", string timing=""):vsrace(vsrace),type(type),timing(timing){}
+
+
+string toText()
+{
+    stringstream ss;
+    ss<<vsrace<<","<<type<<","<<timing;
+    return ss.str();
+}
+
+string getraza()
+{
+    return vsrace;
+}
+
+
+};
+
+class GestorBuilds
+{
+    vector <zergbuilds*> strat;
+    public:
+        ~GestorBuilds(){
+            for (int i=0; i<strat.size(); i++)
+                delete strat[i];
+        }
+
+void AgregarBuild(string vsrace = "",string type  = "",string timing = "") {
+
+        ofstream guide("builds.csv",ios::app);
+        strat.push_back(new zergbuilds(vsrace,type,timing));
+        guide<<strat[strat.size()-1]->toText();
+     }
+
+ void GuardarBuild()
+ {
+     ofstream guide("builds.csv");
+     if(!guide.is_open()) return;
+     for (int i=0;i<strat.size();i++)
+        guide<<strat[i]->toText()<<endl;
+
+ }
+
+ void leertodo()
+ {
+     ifstream todo("builds.csv");
+     string vsrace, type, timing,linea;
+     while(getline(todo,linea))
+     {
+         stringstream ss(linea);
+         getline(ss,vsrace,',');
+         getline(ss,type,',');
+         getline(ss,timing);
+
+         strat.push_back(new zergbuilds(vsrace,type,timing));
+     }
+
+ }
+
+
+ void MostrarBuilds()
+ {
+     for(int i =0;i<strat.size();i++)
+        cout<<strat[i]->toText()<<endl;
+}
+
+string Buscarporraza(string raza)
+{
+    for(int i=0;i<strat.size();i++)
+        if(strat[i]->getraza()==raza)
+            cout<<strat[i]->toText()<<endl;
+}
+
+};
+
+int main()
+{   string vsrace,type, timing;
+    string sino;
+    GestorBuilds *gb = new GestorBuilds();
+    gb->leertodo();
+    do{
+    cout<<"Ingrese la raza enemiga: ";
+    cin>>vsrace;
+    cout<<"Ingrese el tipo de estrategia: ";
+    cin>>type;
+    cout<<"Ingrese el minuto: ";
+    cin>>timing;
+    gb->AgregarBuild(vsrace,type,timing);
+    cout<<"Continuar? escribir no para terminar: ";
+    cin>>sino;
+    system("cls");
+    }while(sino != "no");
+    cout<<"Gracias por usar el servicio"<<endl;
+
+    cout<<"Ingrese raza para buscar: ";
+    cin>>vsrace;
+
+    gb->MostrarBuilds();
+
+    cout<<"    \n\n\n";
+    gb->Buscarporraza(vsrace);
+    gb->GuardarBuild();
+
+}
