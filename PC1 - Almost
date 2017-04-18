@@ -1,0 +1,202 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+#include <stdlib.h>
+#include <vector>
+#include <windows.h>
+using namespace std;
+
+class contacto
+{
+string nombre, apellido, numero ;
+
+public:
+    contacto(string nombre="", string apellido="", string numero=""):nombre(nombre), apellido(apellido), numero(numero){}
+
+string toText()
+{
+    stringstream ss;
+    ss<<nombre<<","<<apellido<<","<<numero;
+return ss.str();
+}
+string getname()
+{
+    return nombre;
+}
+
+
+
+};
+
+class GestorContactos
+{
+vector<contacto*> todocontactos;
+
+public:
+    ~GestorContactos(){
+    for (int i=0;i<todocontactos.size();i++)
+        delete todocontactos[i];
+    }
+
+
+ void AgregarContacto(string nombre, string apellido, string numero)
+ {
+     ofstream agenda("agenda.csv",ios::app);
+     todocontactos.push_back(new contacto(nombre, apellido, numero));
+     agenda<<todocontactos[todocontactos.size()-1]->toText()<<endl;
+
+ }
+
+ void LeerContactos()
+ {
+     ifstream agenda("agenda.csv");
+        string nombre, apellido, numero, linea;
+        while(getline(agenda,linea))
+        {
+
+            stringstream ss(linea);
+            getline (ss,nombre,',');
+            getline(ss,apellido,',');
+            getline(ss,numero);
+
+            todocontactos.push_back(new contacto(nombre,apellido,numero));
+
+        }
+
+
+
+ }
+
+ void MostrarContactos()
+{
+
+    for (int i = 0; i<todocontactos.size();i++)
+        cout<<"["<<i+1<<"]"<<todocontactos[i]->toText()<<endl;
+}
+
+
+void EliminarContacto(int pos)
+{
+    todocontactos.erase(todocontactos.begin()+pos);
+
+}
+
+void GuardarContactos()
+{
+    ofstream agenda("agenda.csv");
+    for (int i =0;i<todocontactos.size();i++)
+        agenda<<todocontactos[i]->toText()<<endl;
+
+}
+
+void BuscarNombreymostrar(string nom)
+{
+
+for (int i=0;i<todocontactos.size();i++)
+    if (todocontactos[i]->getname()==nom)
+        cout<<todocontactos[i]->toText()<<endl;
+}
+
+void ModificarContacto(int pos, string nombre, string apellido, string numero)
+
+{
+
+    for(int i=pos;i<todocontactos.size();i++)
+            todocontactos[i+1]=todocontactos[i];
+        todocontactos[pos]=new contacto(nombre,apellido,numero);}
+
+
+
+};
+
+
+
+
+
+int main()
+{   GestorContactos *gc = new GestorContactos();
+    int x, posicion, elim;
+    int escape;
+    string nombreabus;
+    string nombre, apellido, numero;
+    gc->LeerContactos();
+   do
+            {
+            system("cls");
+            cout<<"¿Que deseas hacer? :)" <<endl;
+            cout<<"[1] Agregar nuevo contacto" <<endl;
+            cout<<"[2] Mostrar contactos actuales" <<endl;
+            cout<<"[3] Eliminar contacto"<<endl;
+            cout<<"[4] Buscar contactos por nombre"<<endl;
+            cout<<"[5] Modificar datos"<<endl;
+            cout<<"[9] Salir"<<endl;
+            cin>>x;
+            cin.ignore();
+
+
+            switch(x){
+            case 1:
+            system("cls");
+            cout<<"Ingrese nombre: ";
+            cin>>nombre;
+            cout<<"Ingrese apellido: ";
+            cin>>apellido;
+            cout<<"Ingrese telefono: ";
+            cin>>numero;
+            gc->AgregarContacto(nombre,apellido,numero);
+            cout<<"Su contacto fue agregado satisfactoriamente"<<endl;
+            system("pause");
+            break;
+            case 2:
+            system("cls");
+
+            gc->MostrarContactos();
+            system("pause");
+            break;
+            case 3:
+            system("cls");
+
+            gc->MostrarContactos();
+            cin>>posicion;
+            gc->EliminarContacto(posicion-1);
+            gc->MostrarContactos();
+
+            system("pause");
+            break;
+            case 4:
+            system("cls");
+            cout<<"Ingrese nombre: "<<endl;
+            cin>>nombreabus;
+            gc->BuscarNombreymostrar(nombreabus);
+            system("pause");
+            break;
+            case 5:
+            system("cls");
+            gc->MostrarContactos();
+            cout<<"Que contacto desea modificar?"<<endl;
+            cin>>elim;
+            cout<<"Ingrese nombre: ";
+            cin>>nombre;
+            cout<<"Ingrese apellido: ";
+            cin>>apellido;
+            cout<<"Ingrese telefono: ";
+            cin>>numero;
+            gc->ModificarContacto(elim-1,nombre,apellido,numero);
+            gc->MostrarContactos();
+            system("pause");
+            break;
+            case 9:
+            gc->GuardarContactos();
+            break;
+            default: {cout<<"Opcion incorrecta, intente denuevo"<<endl;
+                      system("pause");}
+
+
+
+           }
+
+        }while(x!=9);
+
+    return 0;
+}
