@@ -1,0 +1,76 @@
+#ifndef __LISTAS_H__
+#define __LISTAS_H__
+
+template <class T>
+class ListaSE {
+  struct Nodo {
+    T elem;
+    Nodo* next;
+
+    Nodo(T elem = 0; Nodo* next = nullptr) : elem(elem), next(next) {}
+  };
+
+  Nodo* inicio;
+  int n;
+public:
+  ListaSE() : n(0), inicio(nullptr) {}
+  ~ListaSE() {
+    while (inicio != nullptr) {
+      Nodo* aux = inicio;
+      inicio = inicio->next;
+      delete aux;
+    }
+  }
+
+  int tamanio() { // size()
+    return n;
+  }
+  bool insertarInicio(T elem) { // push_front()
+    Nodo* nuevo = new Nodo(elem, inicio);
+    if (nuevo == nullptr) return false;
+    inicio = nuevo;
+    ++n;
+    return true;
+  }
+  bool insertar(T elem, int p) { // insert*
+    if (p < 0 || p > n) return false;
+    if (p == 0) insertarInicio(elem);
+    int c = 1;
+    Nodo* aux = inicio;
+    while (c++ < p) {
+      aux = aux->next;
+    }
+    Nodo* nuevo = new Nodo(elem, aux->next);
+    if (nuevo == nullptr) return false;
+    aux->next = nuevo;
+    ++n;
+    return true;
+  }
+  bool insertarFinal(T eleme) { // push_back()
+    insertar(elem, n);
+  }
+  bool eliminarInicio() {
+    if (n == 0) return false;
+    Nodo* aux = inicio;
+    inicio = inicio->next;
+    delete aux;
+    --n;
+    return true;
+  }
+  //not yet
+    bool eliminarPos(T elem, int p) {
+    if (p < 0 || p > n) return false;
+    if (p == 0) insertarInicio(elem);
+    int c = 1;
+    Nodo* aux = inicio;
+     while (c++ < p) {
+      aux = aux->next;
+    }
+    inicio = inicio->next;
+    delete aux;
+    return true;
+  }
+  
+};
+
+#endif
