@@ -1,0 +1,66 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class DisjointSet {
+	vector<int> parents;
+public:
+	DisjointSet(int n = 10) {
+		parents.resize(n);
+		for (int i = 0; i < parents.size(); ++i) {
+			parents[i] = i;
+		}
+	}
+
+	int Find(int x) {
+		if (parents[x] == x) {
+			return x;
+		} else {
+			return Find(parents[x]);
+		}
+	}
+	
+	int Find2(int x) {
+		while (parents[x] != x) {
+			x = parents[x];
+		}
+		return x;
+	}
+	
+	void Union(int x, int y) {
+		auto repX = Find(x);
+		auto repY = Find(y);
+		if (repX != repY) {
+			parents[repY] = repX;
+		}
+	}
+	
+	bool IsSameSet(int x, int y) {
+		return Find(x) == Find(y);
+	}
+	
+	vector<int>& getDS() {
+		return parents;
+	}
+};
+
+ostream& operator << (ostream& os, vector<int> v) {
+	os << "[";
+	for (int e : v) {
+		os << " " << e;
+	}
+	os << " ]";
+	return os;
+}
+
+int main() {
+	DisjointSet ds(5);
+	ds.Union(2, 3);
+	ds.Union(1, 0);
+	ds.Union(0, 4);
+	
+	cout << ds.getDS() << endl;
+	
+	return 0;
+}
