@@ -1,37 +1,67 @@
 #include <iostream>
 #include <vector>
 
+//recordar poner click derecho(arriba de sources, propiedades , proyect settings, build options darle check a iso 14
+
 using namespace std;
 
-void MakeSet(vector<int>& disjointset) {
-	for (int i = 0; i < disjointset.size(); ++i) {
-		disjointset[i] = i;
-	}
+void MakeSet(vector<int>& disjointset)
+{
+    for(int i = 0; i<disjointset.size(); ++i)
+    {
+        disjointset[i]=i;
+    }
 }
 
-int Find(vector<int> disjointset, int x) {
-	if (disjointset[x] == x) {
-		return x;
-	} else {
-		return Find(disjointset, disjointset[x]);
-	}
-}
+int Find(vector<int> disjointset, int x)
+{
+    if(disjointset[x]==x)
+    {
+        return x;
+    }else{
+        return Find(disjointset, disjointset[x]);
+    }
 
-int Find2(vector<int> disjointset, int x) {
-	while (disjointset[x] != x) {
-		x = disjointset[x];
-	}
-	return x;
-}
-
-void Union(vector<int>& disjointset, int x, int y) {
-	auto repX = Find(disjointset, x);
-	auto repY = Find(disjointset, y);
-	if (repX != repY) {
-		disjointset[repY] = repX;
-	}
 }
 
 bool IsSameSet(vector<int>& disjointset, int x, int y) {
 	return Find(disjointset, x) == Find(disjointset, y);
+}
+
+
+void Union(vector<int>& ds, int x, int y)
+{
+        auto repX=Find(ds,y);
+        auto repY=Find(ds,y);
+
+        if(repX!=repY)
+        {
+            ds[repY] = repX;
+        }
+}
+
+ostream& operator << (ostream& os, vector<int> v)
+{
+    os << "[";
+    for(int e : v){
+        os<< " "<<e;
+    }
+    os<< " ]";
+    return os;
+}
+
+int main()
+{
+
+    vector<int> ds (5);
+    MakeSet(ds);
+    Union(ds, 2,3);
+    Union(ds, 1,0);
+    Union(ds, 0,4);
+
+    cout<<ds<<endl;
+
+    return 0;
+
+
 }
