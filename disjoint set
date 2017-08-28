@@ -1,0 +1,37 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void MakeSet(vector<int>& disjointset) {
+	for (int i = 0; i < disjointset.size(); ++i) {
+		disjointset[i] = i;
+	}
+}
+
+int Find(vector<int> disjointset, int x) {
+	if (disjointset[x] == x) {
+		return x;
+	} else {
+		return Find(disjointset, disjointset[x]);
+	}
+}
+
+int Find2(vector<int> disjointset, int x) {
+	while (disjointset[x] != x) {
+		x = disjointset[x];
+	}
+	return x;
+}
+
+void Union(vector<int>& disjointset, int x, int y) {
+	auto repX = Find(disjointset, x);
+	auto repY = Find(disjointset, y);
+	if (repX != repY) {
+		disjointset[repY] = repX;
+	}
+}
+
+bool IsSameSet(vector<int>& disjointset, int x, int y) {
+	return Find(disjointset, x) == Find(disjointset, y);
+}
