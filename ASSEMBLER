@@ -1,0 +1,19 @@
+repetir:
+MOV A, 49
+MOV B, 232
+
+while:
+MOV [B], A
+INC A
+INC B
+CMP A, 53
+JNZ while
+INC C
+while1:
+MOV A, 32
+MOV [B], A
+DEC B
+CMP B, 231
+JNZ while1
+INC C
+JMP repetir
