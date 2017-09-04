@@ -1,0 +1,44 @@
+#include <iostream>
+
+using namespace std;
+
+class DisjointSetNR
+{
+    vector<int> parents;
+public:
+    DisjointSetNR(int=10):parents(n,-1), numDS(n){}
+    int Find(int n){
+        return parents[n]<0? n:Find(parents[n]);
+    }
+    
+    bool Union(int x, int y)
+    {
+        int repX=Find(x);
+        int repY=Find(y);
+        if(repX==repY)
+        {
+            return false;
+        }
+            if(Rank(repY)<Rank(repX)){
+        parents[repY]=parents[repX];
+            }else if(Rank(repX)<Rank(repY)){
+            parents[repX]= [repY];
+            }else{
+                parents[repY]=repX;
+                parents[repX]--;
+            }
+        
+        
+        -- numDS;
+    
+    int Rank(int x)
+    {
+        return -1 * parent[Find(x)];    
+    }
+};
+
+int main()
+{
+    cout << "Hello world!" << endl;
+    return 0;
+}
