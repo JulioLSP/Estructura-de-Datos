@@ -1,0 +1,83 @@
+#ifndef _LISTASE_H__
+#define _LISTASE_H__
+
+template<typename T>
+
+class ListaSE{
+	
+	struct Nodo{
+		e;  //elemento o payload
+		Nodo* next; //siguiente nodo
+		
+		Nodo(T e = 0, Nodo* next = nullptr) : e(e),next(next){}
+	
+		
+	};
+	
+	int n;
+	Nodo* inicio;
+	
+public:
+	ListaSE():n(0), inicio(nullptr){}
+	~ListaSE(){
+		Nodo* aux;
+		
+		while(inicio != nullptr){
+		aux=inicio;
+		inicio=inicio->next;
+		delete aux;		
+		}
+		
+	
+	}	
+	
+	bool agregarInicio(T e){
+		Nodo* nuevo = new Nodo(e, inicio);
+		if(nuevo==nullptr) retun false;
+		inicio = nuevo;
+		return true;	
+	}
+	
+	bool eliminarInicio(){
+	
+		if(inicio == nullptr)return false;
+		Nodo* aux = inicio;
+		inicio = inicio->next;
+		delete aux;
+		--n;
+		return true;
+	}
+	
+	bool agregarPos(T e, int p)
+	{
+		if (p< 0 || p> n ) return false;
+		if(p==0)return agregarInicio(e);
+		int c = 1;
+		Nodo* aux = inicio;
+		while(c<p)
+		{
+			aux=aux->next;
+			++c;
+		}
+		Nodo* nuevo = new Nodo(e, aux->next);
+		if(nuevo == nullptr) return false;
+		++n;
+		aux-> next = nuevo;
+		return true;
+	}
+	
+
+		
+	
+	
+private: 
+	void eliminaTodito(Nodo* no){
+		if(no !=nullptr ){
+			eliminaTodito(no->next);
+			delete no;
+		}
+	}
+	
+};
+
+#endif
